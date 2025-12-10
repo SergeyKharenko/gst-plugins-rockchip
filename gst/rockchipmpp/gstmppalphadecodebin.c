@@ -53,7 +53,7 @@ GST_STATIC_PAD_TEMPLATE ("src",
     );
 
 static gboolean
-gst_mpp_alpha_decode_bin_open (GstMppAlphaDecodeBin * self)
+gst_mpp_alpha_decode_bin_open (GstMppAlphaDecodeBin *self)
 {
   GstMppAlphaDecodeBinPrivate *priv =
       gst_mpp_alpha_decode_bin_get_instance_private (self);
@@ -71,7 +71,7 @@ gst_mpp_alpha_decode_bin_open (GstMppAlphaDecodeBin * self)
 }
 
 static GstStateChangeReturn
-gst_mpp_alpha_decode_bin_change_state (GstElement * element,
+gst_mpp_alpha_decode_bin_change_state (GstElement *element,
     GstStateChange transition)
 {
   GstMppAlphaDecodeBin *self = GST_MPP_ALPHA_DECODE_BIN (element);
@@ -89,7 +89,7 @@ gst_mpp_alpha_decode_bin_change_state (GstElement * element,
 }
 
 static void
-gst_mpp_alpha_decode_bin_constructed (GObject * obj)
+gst_mpp_alpha_decode_bin_constructed (GObject *obj)
 {
   GstMppAlphaDecodeBin *self = GST_MPP_ALPHA_DECODE_BIN (obj);
   GstMppAlphaDecodeBinPrivate *priv =
@@ -197,7 +197,7 @@ cleanup:
 }
 
 static void
-gst_mpp_alpha_decode_bin_class_init (GstMppAlphaDecodeBinClass * klass)
+gst_mpp_alpha_decode_bin_class_init (GstMppAlphaDecodeBinClass *klass)
 {
   GstElementClass *element_class = (GstElementClass *) klass;
   GObjectClass *obj_class = (GObjectClass *) klass;
@@ -213,7 +213,7 @@ gst_mpp_alpha_decode_bin_class_init (GstMppAlphaDecodeBinClass * klass)
 }
 
 static void
-gst_mpp_alpha_decode_bin_init (GstMppAlphaDecodeBin * self)
+gst_mpp_alpha_decode_bin_init (GstMppAlphaDecodeBin *self)
 {
   (void) self;
 }

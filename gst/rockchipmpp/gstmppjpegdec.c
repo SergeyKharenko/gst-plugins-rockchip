@@ -96,14 +96,13 @@ static const GstVideoFormat gst_mpp_jpeg_dec_pp_formats[] = {
 };
 
 static GstVideoFormat
-gst_mpp_jpeg_dec_try_pp_convert (GstVideoDecoder * decoder,
+gst_mpp_jpeg_dec_try_pp_convert (GstVideoDecoder *decoder,
     GstVideoFormat format, gboolean force)
 {
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
   MppFrameFormat mpp_format = force ? MPP_FMT_YUV420SP : MPP_FMT_BUTT;
-  guint i;
 
-  for (i = 0; i < ARRAY_SIZE (gst_mpp_jpeg_dec_pp_formats); i++) {
+  for (guint i = 0; i < ARRAY_SIZE (gst_mpp_jpeg_dec_pp_formats); i++) {
     if (format == gst_mpp_jpeg_dec_pp_formats[i]) {
       mpp_format = gst_mpp_gst_format_to_mpp_format (format);
       break;
@@ -121,7 +120,7 @@ gst_mpp_jpeg_dec_try_pp_convert (GstVideoDecoder * decoder,
 }
 
 static GstVideoFormat
-gst_mpp_jpeg_dec_get_format (GstStructure * structure)
+gst_mpp_jpeg_dec_get_format (GstStructure *structure)
 {
   const gchar *s;
 
@@ -132,8 +131,8 @@ gst_mpp_jpeg_dec_get_format (GstStructure * structure)
 }
 
 static void
-gst_mpp_jpeg_dec_set_property (GObject * object,
-    guint prop_id, const GValue * value, GParamSpec * pspec)
+gst_mpp_jpeg_dec_set_property (GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (object);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -154,8 +153,8 @@ gst_mpp_jpeg_dec_set_property (GObject * object,
 }
 
 static void
-gst_mpp_jpeg_dec_get_property (GObject * object,
-    guint prop_id, GValue * value, GParamSpec * pspec)
+gst_mpp_jpeg_dec_get_property (GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (object);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -171,7 +170,7 @@ gst_mpp_jpeg_dec_get_property (GObject * object,
 }
 
 static gboolean
-gst_mpp_jpeg_dec_start (GstVideoDecoder * decoder)
+gst_mpp_jpeg_dec_start (GstVideoDecoder *decoder)
 {
   GstVideoDecoderClass *pclass = GST_VIDEO_DECODER_CLASS (parent_class);
   GstMppJpegDec *self = GST_MPP_JPEG_DEC (decoder);
@@ -205,7 +204,7 @@ gst_mpp_jpeg_dec_start (GstVideoDecoder * decoder)
 }
 
 static gboolean
-gst_mpp_jpeg_dec_stop (GstVideoDecoder * decoder)
+gst_mpp_jpeg_dec_stop (GstVideoDecoder *decoder)
 {
   GstVideoDecoderClass *pclass = GST_VIDEO_DECODER_CLASS (parent_class);
   GstMppJpegDec *self = GST_MPP_JPEG_DEC (decoder);
@@ -223,8 +222,8 @@ gst_mpp_jpeg_dec_stop (GstVideoDecoder * decoder)
 }
 
 static gboolean
-gst_mpp_jpeg_dec_set_format (GstVideoDecoder * decoder,
-    GstVideoCodecState * state)
+gst_mpp_jpeg_dec_set_format (GstVideoDecoder *decoder,
+    GstVideoCodecState *state)
 {
   GstVideoDecoderClass *pclass = GST_VIDEO_DECODER_CLASS (parent_class);
   GstMppJpegDec *self = GST_MPP_JPEG_DEC (decoder);
@@ -328,8 +327,7 @@ gst_mpp_jpeg_dec_set_format (GstVideoDecoder * decoder,
 }
 
 static MppPacket
-gst_mpp_jpeg_dec_get_mpp_packet (GstVideoDecoder * decoder,
-    GstMapInfo * mapinfo)
+gst_mpp_jpeg_dec_get_mpp_packet (GstVideoDecoder *decoder, GstMapInfo *mapinfo)
 {
   GstMppJpegDec *self = GST_MPP_JPEG_DEC (decoder);
   MppBuffer mbuf = NULL;
@@ -354,7 +352,7 @@ gst_mpp_jpeg_dec_get_mpp_packet (GstVideoDecoder * decoder,
 }
 
 static MPP_RET
-gst_mpp_jpeg_dec_send_mpp_packet (GstVideoDecoder * decoder,
+gst_mpp_jpeg_dec_send_mpp_packet (GstVideoDecoder *decoder,
     MppPacket mpkt, gint timeout_ms)
 {
   GstMppJpegDec *self = GST_MPP_JPEG_DEC (decoder);
@@ -403,7 +401,7 @@ error:
 }
 
 static MppFrame
-gst_mpp_jpeg_dec_poll_mpp_frame (GstVideoDecoder * decoder, gint timeout_ms)
+gst_mpp_jpeg_dec_poll_mpp_frame (GstVideoDecoder *decoder, gint timeout_ms)
 {
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
   MppPacket mpkt = NULL;
@@ -435,7 +433,7 @@ gst_mpp_jpeg_dec_poll_mpp_frame (GstVideoDecoder * decoder, gint timeout_ms)
 }
 
 static gboolean
-gst_mpp_jpeg_dec_shutdown (GstVideoDecoder * decoder, gboolean drain UNUSED)
+gst_mpp_jpeg_dec_shutdown (GstVideoDecoder *decoder, gboolean drain UNUSED)
 {
   GstMppJpegDec *self = GST_MPP_JPEG_DEC (decoder);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -514,7 +512,7 @@ gst_mpp_jpeg_dec_format_get_type (void)
 }
 
 static void
-gst_mpp_jpeg_dec_init (GstMppJpegDec * self)
+gst_mpp_jpeg_dec_init (GstMppJpegDec *self)
 {
   GstMppDec *mppdec = GST_MPP_DEC (self);
   mppdec->format = DEFAULT_PROP_FORMAT;
@@ -541,7 +539,7 @@ gst_mpp_jpeg_dec_setup_default_format (void)
 }
 
 static void
-gst_mpp_jpeg_dec_class_init (GstMppJpegDecClass * klass)
+gst_mpp_jpeg_dec_class_init (GstMppJpegDecClass *klass)
 {
   GstVideoDecoderClass *decoder_class = GST_VIDEO_DECODER_CLASS (klass);
   GstMppDecClass *pclass = GST_MPP_DEC_CLASS (klass);
@@ -589,7 +587,7 @@ gst_mpp_jpeg_dec_class_init (GstMppJpegDecClass * klass)
 }
 
 gboolean
-gst_mpp_jpeg_dec_register (GstPlugin * plugin, guint rank)
+gst_mpp_jpeg_dec_register (GstPlugin *plugin, guint rank)
 {
   return gst_element_register (plugin, "mppjpegdec", rank,
       gst_mpp_jpeg_dec_get_type ());

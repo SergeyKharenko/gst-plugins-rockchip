@@ -76,9 +76,7 @@ static const struct
 GstVideoFormat
 gst_video_format_from_drm (guint32 drmfmt)
 {
-  gint i;
-
-  for (i = 0; i < G_N_ELEMENTS (format_map); i++) {
+  for (gsize i = 0; i < G_N_ELEMENTS (format_map); i++) {
     if (format_map[i].fourcc == drmfmt)
       return format_map[i].format;
   }
@@ -89,9 +87,7 @@ gst_video_format_from_drm (guint32 drmfmt)
 guint32
 gst_drm_format_from_video (GstVideoFormat fmt)
 {
-  gint i;
-
-  for (i = 0; i < G_N_ELEMENTS (format_map); i++) {
+  for (gsize i = 0; i < G_N_ELEMENTS (format_map); i++) {
     if (format_map[i].format == fmt)
       return format_map[i].fourcc;
   }
@@ -174,12 +170,11 @@ gst_video_format_to_structure (GstVideoFormat format)
 GstCaps *
 gst_kms_sink_caps_template_fill (void)
 {
-  gint i;
   GstCaps *caps;
   GstStructure *template;
 
   caps = gst_caps_new_empty ();
-  for (i = 0; i < G_N_ELEMENTS (format_map); i++) {
+  for (gsize i = 0; i < G_N_ELEMENTS (format_map); i++) {
     template = gst_video_format_to_structure (format_map[i].format);
     gst_structure_set (template,
         "width", GST_TYPE_INT_RANGE, 1, G_MAXINT,
@@ -209,7 +204,7 @@ gst_video_calculate_device_ratio (guint dev_width, guint dev_height,
     guint * dpy_par_n, guint * dpy_par_d)
 {
   gdouble ratio, delta, cur_delta;
-  gint i, j, index, windex;
+  gsize index, windex;
 
   /* First, calculate the "real" ratio based on the X values; which is
    * the "physical" w/h divided by the w/h in pixels of the display */
@@ -225,8 +220,8 @@ gst_video_calculate_device_ratio (guint dev_width, guint dev_height,
   index = 0;
   windex = 0;
 
-  for (i = 1; i < G_N_ELEMENTS (device_par_map); i++) {
-    for (j = 0; j < 2; j++) {
+  for (gsize i = 1; i < G_N_ELEMENTS (device_par_map); i++) {
+    for (gsize j = 0; j < 2; j++) {
       cur_delta = DELTA (ratio, i, j);
       if (cur_delta < delta) {
         index = i;

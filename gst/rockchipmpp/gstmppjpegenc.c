@@ -80,8 +80,8 @@ GST_STATIC_PAD_TEMPLATE ("sink",
         GST_MPP_JPEG_ENC_SIZE_CAPS));
 
 static void
-gst_mpp_jpeg_enc_set_property (GObject * object,
-    guint prop_id, const GValue * value, GParamSpec * pspec)
+gst_mpp_jpeg_enc_set_property (GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (object);
   GstMppJpegEnc *self = GST_MPP_JPEG_ENC (encoder);
@@ -121,8 +121,8 @@ gst_mpp_jpeg_enc_set_property (GObject * object,
 }
 
 static void
-gst_mpp_jpeg_enc_get_property (GObject * object,
-    guint prop_id, GValue * value, GParamSpec * pspec)
+gst_mpp_jpeg_enc_get_property (GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (object);
   GstMppJpegEnc *self = GST_MPP_JPEG_ENC (encoder);
@@ -144,7 +144,7 @@ gst_mpp_jpeg_enc_get_property (GObject * object,
 }
 
 static gboolean
-gst_mpp_jpeg_enc_apply_properties (GstVideoEncoder * encoder)
+gst_mpp_jpeg_enc_apply_properties (GstVideoEncoder *encoder)
 {
   GstMppJpegEnc *self = GST_MPP_JPEG_ENC (encoder);
   GstMppEnc *mppenc = GST_MPP_ENC (encoder);
@@ -160,8 +160,8 @@ gst_mpp_jpeg_enc_apply_properties (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_jpeg_enc_set_format (GstVideoEncoder * encoder,
-    GstVideoCodecState * state)
+gst_mpp_jpeg_enc_set_format (GstVideoEncoder *encoder,
+    GstVideoCodecState *state)
 {
   GstVideoEncoderClass *pclass = GST_VIDEO_ENCODER_CLASS (parent_class);
   GstCaps *caps;
@@ -177,8 +177,8 @@ gst_mpp_jpeg_enc_set_format (GstVideoEncoder * encoder,
 }
 
 static GstFlowReturn
-gst_mpp_jpeg_enc_handle_frame (GstVideoEncoder * encoder,
-    GstVideoCodecFrame * frame)
+gst_mpp_jpeg_enc_handle_frame (GstVideoEncoder *encoder,
+    GstVideoCodecFrame *frame)
 {
   GstVideoEncoderClass *pclass = GST_VIDEO_ENCODER_CLASS (parent_class);
 
@@ -191,7 +191,7 @@ gst_mpp_jpeg_enc_handle_frame (GstVideoEncoder * encoder,
 }
 
 static void
-gst_mpp_jpeg_enc_init (GstMppJpegEnc * self)
+gst_mpp_jpeg_enc_init (GstMppJpegEnc *self)
 {
   self->parent.mpp_type = MPP_VIDEO_CodingMJPEG;
 
@@ -201,7 +201,7 @@ gst_mpp_jpeg_enc_init (GstMppJpegEnc * self)
 }
 
 static void
-gst_mpp_jpeg_enc_class_init (GstMppJpegEncClass * klass)
+gst_mpp_jpeg_enc_class_init (GstMppJpegEncClass *klass)
 {
   GstVideoEncoderClass *encoder_class = GST_VIDEO_ENCODER_CLASS (klass);
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
@@ -248,7 +248,7 @@ gst_mpp_jpeg_enc_class_init (GstMppJpegEncClass * klass)
 }
 
 gboolean
-gst_mpp_jpeg_enc_register (GstPlugin * plugin, guint rank)
+gst_mpp_jpeg_enc_register (GstPlugin *plugin, guint rank)
 {
   if (!gst_mpp_enc_supported (MPP_VIDEO_CodingMJPEG))
     return FALSE;

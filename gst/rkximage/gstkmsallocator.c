@@ -169,7 +169,7 @@ static gboolean
 gst_kms_allocator_memory_create (GstKMSAllocator * allocator,
     GstKMSMemory * kmsmem, GstVideoInfo * vinfo)
 {
-  gint i, ret, h;
+  gint ret, h;
   struct drm_mode_create_dumb arg = { 0, };
   guint32 fmt;
   gint num_planes = GST_VIDEO_INFO_N_PLANES (vinfo);
@@ -198,7 +198,7 @@ gst_kms_allocator_memory_create (GstKMSAllocator * allocator,
   if (!arg.pitch)
     goto done;
 
-  for (i = 0; i < num_planes; i++) {
+  for (gint i = 0; i < num_planes; i++) {
     guint32 pitch;
 
     if (!arg.pitch)
@@ -345,6 +345,9 @@ gst_kms_allocator_class_init (GstKMSAllocatorClass * klass)
 static gpointer
 gst_kms_memory_map (GstMemory * mem, gsize maxsize, GstMapFlags flags)
 {
+  (void) maxsize;
+  (void) flags;
+
   GstKMSMemory *kmsmem;
   GstKMSAllocator *alloc;
   int err;
@@ -442,7 +445,7 @@ static gboolean
 gst_kms_allocator_add_fb (GstKMSAllocator * alloc, GstKMSMemory * kmsmem,
     gsize in_offsets[GST_VIDEO_MAX_PLANES], GstVideoInfo * vinfo)
 {
-  gint i, ret = -1;
+gint ret = -1;
   gint num_planes = GST_VIDEO_INFO_N_PLANES (vinfo);
   guint32 w, h, fmt, bo_handles[4] = { 0, };
   guint32 pitches[4] = { 0, };
@@ -455,7 +458,7 @@ gst_kms_allocator_add_fb (GstKMSAllocator * alloc, GstKMSMemory * kmsmem,
   h = GST_VIDEO_INFO_HEIGHT (vinfo);
   fmt = gst_drm_format_from_video (GST_VIDEO_INFO_FORMAT (vinfo));
 
-  for (i = 0; i < num_planes; i++) {
+  for (gint i = 0; i < num_planes; i++) {
     if (kmsmem->bo)
       bo_handles[i] = kmsmem->bo->handle;
     else
@@ -471,7 +474,7 @@ gst_kms_allocator_add_fb (GstKMSAllocator * alloc, GstKMSMemory * kmsmem,
   if (GST_VIDEO_INFO_IS_AFBC (vinfo)) {
     guint64 modifiers[4] = { 0 };
 
-    for (i = 0; i < num_planes; i++)
+    for (gint i = 0; i < num_planes; i++)
       modifiers[i] = DRM_AFBC_MODIFIER;
 
     if (fmt == DRM_FORMAT_NV12 || fmt == DRM_FORMAT_NV12_10 ||
@@ -562,7 +565,7 @@ gst_kms_allocator_dmabuf_import (GstAllocator * allocator, gint * prime_fds,
   GstKMSAllocator *alloc;
   GstKMSMemory *kmsmem;
   GstMemory *mem;
-  gint i, ret;
+  gint ret;
   guint32 handle = 0;
 
   g_return_val_if_fail (n_planes <= GST_VIDEO_MAX_PLANES, FALSE);
@@ -575,19 +578,26 @@ gst_kms_allocator_dmabuf_import (GstAllocator * allocator, gint * prime_fds,
   gst_memory_init (mem, GST_MEMORY_FLAG_NO_SHARE, allocator, NULL,
       GST_VIDEO_INFO_SIZE (vinfo), 0, 0, GST_VIDEO_INFO_SIZE (vinfo));
 
+  gint err_id;
   alloc = GST_KMS_ALLOCATOR (allocator);
-  for (i = 0; i < n_planes; i++) {
+  for (gint i = 0; i < n_planes; i++) {
     ret = drmPrimeFDToHandle (alloc->priv->fd, prime_fds[i],
         &kmsmem->gem_handle[i]);
-    if (ret)
+    if (ret){
+      err_id = i;
       goto import_fd_failed;
+    }
+      
   }
 
   if (!gst_kms_allocator_add_fb (alloc, kmsmem, offsets, vinfo))
     goto failed;
 
-  for (i = 0; i < n_planes; i++) {
-    struct drm_gem_close arg = { kmsmem->gem_handle[i], };
+  for (gint i = 0; i < n_planes; i++) {
+    struct drm_gem_close arg = {
+      .handle = kmsmem->gem_handle[i],
+      .pad = 0,
+    };
     gint err;
 
     if (handle == arg.handle)
@@ -609,7 +619,7 @@ gst_kms_allocator_dmabuf_import (GstAllocator * allocator, gint * prime_fds,
 import_fd_failed:
   {
     GST_ERROR_OBJECT (alloc, "Failed to import prime fd %d: %s (%d)",
-        prime_fds[i], strerror (-ret), ret);
+        prime_fds[err_id], strerror (-ret), ret);
     /* fallback */
   }
 

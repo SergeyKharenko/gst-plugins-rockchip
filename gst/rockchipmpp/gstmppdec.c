@@ -78,8 +78,8 @@ enum
 };
 
 static void
-gst_mpp_dec_set_property (GObject * object,
-    guint prop_id, const GValue * value, GParamSpec * pspec)
+gst_mpp_dec_set_property (GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (object);
   GstMppDec *self = GST_MPP_DEC (decoder);
@@ -109,14 +109,14 @@ gst_mpp_dec_set_property (GObject * object,
     }
     case PROP_CROP_RECTANGLE:{
       const GValue *v;
-      gint rect[4], i;
+      gint rect[4];
 
       if (gst_value_array_get_size (value) != 4) {
         GST_WARNING_OBJECT (decoder, "too less values for crop-rectangle");
         break;
       }
 
-      for (i = 0; i < 4; i++) {
+      for (gint i = 0; i < 4; i++) {
         v = gst_value_array_get_value (value, i);
         if (!G_VALUE_HOLDS_INT (v)) {
           GST_WARNING_OBJECT (decoder, "crop-rectangle needs int values");
@@ -158,8 +158,8 @@ gst_mpp_dec_set_property (GObject * object,
 }
 
 static void
-gst_mpp_dec_get_property (GObject * object,
-    guint prop_id, GValue * value, GParamSpec * pspec)
+gst_mpp_dec_get_property (GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (object);
   GstMppDec *self = GST_MPP_DEC (decoder);
@@ -190,7 +190,7 @@ gst_mpp_dec_get_property (GObject * object,
 }
 
 static void
-gst_mpp_dec_stop_task (GstVideoDecoder * decoder, gboolean drain)
+gst_mpp_dec_stop_task (GstVideoDecoder *decoder, gboolean drain)
 {
   GstMppDecClass *klass = GST_MPP_DEC_GET_CLASS (decoder);
 
@@ -216,7 +216,7 @@ gst_mpp_dec_stop_task (GstVideoDecoder * decoder, gboolean drain)
 }
 
 static void
-gst_mpp_dec_reset (GstVideoDecoder * decoder, gboolean drain, gboolean final)
+gst_mpp_dec_reset (GstVideoDecoder *decoder, gboolean drain, gboolean final)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   GList *frames;
@@ -248,7 +248,7 @@ gst_mpp_dec_reset (GstVideoDecoder * decoder, gboolean drain, gboolean final)
 }
 
 static gboolean
-gst_mpp_dec_start (GstVideoDecoder * decoder)
+gst_mpp_dec_start (GstVideoDecoder *decoder)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
 
@@ -283,7 +283,7 @@ gst_mpp_dec_start (GstVideoDecoder * decoder)
 }
 
 static void
-gst_mpp_dec_clear_allocator (GstVideoDecoder * decoder)
+gst_mpp_dec_clear_allocator (GstVideoDecoder *decoder)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   if (self->allocator) {
@@ -295,7 +295,7 @@ gst_mpp_dec_clear_allocator (GstVideoDecoder * decoder)
 }
 
 static gboolean
-gst_mpp_dec_stop (GstVideoDecoder * decoder)
+gst_mpp_dec_stop (GstVideoDecoder *decoder)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
 
@@ -332,7 +332,7 @@ gst_mpp_dec_stop (GstVideoDecoder * decoder)
 }
 
 static gboolean
-gst_mpp_dec_flush (GstVideoDecoder * decoder)
+gst_mpp_dec_flush (GstVideoDecoder *decoder)
 {
   GST_DEBUG_OBJECT (decoder, "flushing");
   gst_mpp_dec_reset (decoder, FALSE, FALSE);
@@ -340,7 +340,7 @@ gst_mpp_dec_flush (GstVideoDecoder * decoder)
 }
 
 static GstFlowReturn
-gst_mpp_dec_drain (GstVideoDecoder * decoder)
+gst_mpp_dec_drain (GstVideoDecoder *decoder)
 {
   GST_DEBUG_OBJECT (decoder, "draining");
   gst_mpp_dec_reset (decoder, TRUE, FALSE);
@@ -348,7 +348,7 @@ gst_mpp_dec_drain (GstVideoDecoder * decoder)
 }
 
 static GstFlowReturn
-gst_mpp_dec_finish (GstVideoDecoder * decoder)
+gst_mpp_dec_finish (GstVideoDecoder *decoder)
 {
   GST_DEBUG_OBJECT (decoder, "finishing");
   gst_mpp_dec_reset (decoder, TRUE, FALSE);
@@ -360,7 +360,7 @@ gst_mpp_dec_finish (GstVideoDecoder * decoder)
 }
 
 static gboolean
-gst_mpp_dec_set_format (GstVideoDecoder * decoder, GstVideoCodecState * state)
+gst_mpp_dec_set_format (GstVideoDecoder *decoder, GstVideoCodecState *state)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
 
@@ -400,7 +400,7 @@ gst_mpp_dec_set_format (GstVideoDecoder * decoder, GstVideoCodecState * state)
 }
 
 static gboolean
-gst_mpp_dec_update_video_info (GstVideoDecoder * decoder, GstVideoFormat format,
+gst_mpp_dec_update_video_info (GstVideoDecoder *decoder, GstVideoFormat format,
     guint width, guint height, gint hstride, gint vstride, guint align,
     gboolean afbc)
 {
@@ -459,7 +459,7 @@ gst_mpp_dec_update_video_info (GstVideoDecoder * decoder, GstVideoFormat format,
 }
 
 gboolean
-gst_mpp_dec_update_simple_video_info (GstVideoDecoder * decoder,
+gst_mpp_dec_update_simple_video_info (GstVideoDecoder *decoder,
     GstVideoFormat format, guint width, guint height, guint align)
 {
   return gst_mpp_dec_update_video_info (decoder, format, width, height, 0, 0,
@@ -467,7 +467,7 @@ gst_mpp_dec_update_simple_video_info (GstVideoDecoder * decoder,
 }
 
 void
-gst_mpp_dec_fixup_video_info (GstVideoDecoder * decoder, GstVideoFormat format,
+gst_mpp_dec_fixup_video_info (GstVideoDecoder *decoder, GstVideoFormat format,
     gint width, gint height)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
@@ -501,7 +501,7 @@ gst_mpp_dec_fixup_video_info (GstVideoDecoder * decoder, GstVideoFormat format,
 }
 
 static GstFlowReturn
-gst_mpp_dec_apply_info_change (GstVideoDecoder * decoder, MppFrame mframe)
+gst_mpp_dec_apply_info_change (GstVideoDecoder *decoder, MppFrame mframe)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   GstVideoFormat dst_format, src_format;
@@ -602,7 +602,7 @@ gst_mpp_dec_apply_info_change (GstVideoDecoder * decoder, MppFrame mframe)
 }
 
 static GstVideoCodecFrame *
-gst_mpp_dec_get_frame (GstVideoDecoder * decoder, GstClockTime pts)
+gst_mpp_dec_get_frame (GstVideoDecoder *decoder, GstClockTime pts)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   GstVideoCodecFrame *frame;
@@ -770,8 +770,8 @@ out:
 
 #ifdef HAVE_RGA
 static gboolean
-gst_mpp_dec_rga_convert (GstVideoDecoder * decoder, MppFrame mframe,
-    GstBuffer * buffer)
+gst_mpp_dec_rga_convert (GstVideoDecoder *decoder, MppFrame mframe,
+    GstBuffer *buffer)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   GstVideoInfo *info = &self->info;
@@ -798,7 +798,7 @@ gst_mpp_dec_rga_convert (GstVideoDecoder * decoder, MppFrame mframe,
 #endif
 
 static GstBuffer *
-gst_mpp_dec_get_gst_buffer (GstVideoDecoder * decoder, MppFrame mframe)
+gst_mpp_dec_get_gst_buffer (GstVideoDecoder *decoder, MppFrame mframe)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   GstVideoInfo *info = &self->info;
@@ -884,8 +884,8 @@ gst_mpp_dec_get_gst_buffer (GstVideoDecoder * decoder, MppFrame mframe)
 }
 
 static void
-gst_mpp_dec_update_interlace_mode (GstVideoDecoder * decoder,
-    GstBuffer * buffer, guint mode)
+gst_mpp_dec_update_interlace_mode (GstVideoDecoder *decoder,
+    GstBuffer *buffer, guint mode)
 {
   GstMppDec *self = GST_MPP_DEC (decoder);
   GstVideoInterlaceMode interlace_mode;
@@ -930,7 +930,7 @@ gst_mpp_dec_update_interlace_mode (GstVideoDecoder * decoder,
 }
 
 static void
-gst_mpp_dec_loop (GstVideoDecoder * decoder)
+gst_mpp_dec_loop (GstVideoDecoder *decoder)
 {
   GstMppDecClass *klass = GST_MPP_DEC_GET_CLASS (decoder);
   GstMppDec *self = GST_MPP_DEC (decoder);
@@ -1041,7 +1041,7 @@ drop:
 }
 
 static GstFlowReturn
-gst_mpp_dec_send_mpp_packet_unlocked (GstVideoDecoder * decoder, MppPacket mpkt)
+gst_mpp_dec_send_mpp_packet_unlocked (GstVideoDecoder *decoder, MppPacket mpkt)
 {
   GstMppDecClass *klass = GST_MPP_DEC_GET_CLASS (decoder);
   GstMppDec *self = GST_MPP_DEC (decoder);
@@ -1064,7 +1064,7 @@ gst_mpp_dec_send_mpp_packet_unlocked (GstVideoDecoder * decoder, MppPacket mpkt)
 }
 
 static GstFlowReturn
-gst_mpp_dec_handle_frame (GstVideoDecoder * decoder, GstVideoCodecFrame * frame)
+gst_mpp_dec_handle_frame (GstVideoDecoder *decoder, GstVideoCodecFrame *frame)
 {
   GstMppDecClass *klass = GST_MPP_DEC_GET_CLASS (decoder);
   GstMppDec *self = GST_MPP_DEC (decoder);
@@ -1175,7 +1175,7 @@ drop:
 }
 
 static GstStateChangeReturn
-gst_mpp_dec_change_state (GstElement * element, GstStateChange transition)
+gst_mpp_dec_change_state (GstElement *element, GstStateChange transition)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (element);
 
@@ -1189,7 +1189,7 @@ gst_mpp_dec_change_state (GstElement * element, GstStateChange transition)
 }
 
 static void
-gst_mpp_dec_init (GstMppDec * self)
+gst_mpp_dec_init (GstMppDec *self)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (self);
 
@@ -1222,7 +1222,7 @@ gst_mpp_dec_rotation_get_type (void)
 #endif
 
 static void
-gst_mpp_dec_class_init (GstMppDecClass * klass)
+gst_mpp_dec_class_init (GstMppDecClass *klass)
 {
   GstVideoDecoderClass *decoder_class = GST_VIDEO_DECODER_CLASS (klass);
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);

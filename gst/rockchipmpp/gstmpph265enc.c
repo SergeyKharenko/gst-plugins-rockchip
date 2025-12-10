@@ -92,8 +92,8 @@ static GstStaticPadTemplate gst_mpp_h265_enc_sink_template =
         GST_MPP_H265_ENC_SIZE_CAPS ";"));
 
 static void
-gst_mpp_h265_enc_set_property (GObject * object,
-    guint prop_id, const GValue * value, GParamSpec * pspec)
+gst_mpp_h265_enc_set_property (GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (object);
   GstMppH265Enc *self = GST_MPP_H265_ENC (encoder);
@@ -157,8 +157,8 @@ gst_mpp_h265_enc_set_property (GObject * object,
 }
 
 static void
-gst_mpp_h265_enc_get_property (GObject * object,
-    guint prop_id, GValue * value, GParamSpec * pspec)
+gst_mpp_h265_enc_get_property (GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (object);
   GstMppH265Enc *self = GST_MPP_H265_ENC (encoder);
@@ -189,7 +189,7 @@ gst_mpp_h265_enc_get_property (GObject * object,
 }
 
 static gboolean
-gst_mpp_h265_enc_set_src_caps (GstVideoEncoder * encoder)
+gst_mpp_h265_enc_set_src_caps (GstVideoEncoder *encoder)
 {
   GstStructure *structure;
   GstCaps *caps;
@@ -205,7 +205,7 @@ gst_mpp_h265_enc_set_src_caps (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_h265_enc_apply_properties (GstVideoEncoder * encoder)
+gst_mpp_h265_enc_apply_properties (GstVideoEncoder *encoder)
 {
   GstMppH265Enc *self = GST_MPP_H265_ENC (encoder);
   GstMppEnc *mppenc = GST_MPP_ENC (encoder);
@@ -242,8 +242,8 @@ gst_mpp_h265_enc_apply_properties (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_h265_enc_set_format (GstVideoEncoder * encoder,
-    GstVideoCodecState * state)
+gst_mpp_h265_enc_set_format (GstVideoEncoder *encoder,
+    GstVideoCodecState *state)
 {
   GstVideoEncoderClass *pclass = GST_VIDEO_ENCODER_CLASS (parent_class);
 
@@ -254,8 +254,8 @@ gst_mpp_h265_enc_set_format (GstVideoEncoder * encoder,
 }
 
 static GstFlowReturn
-gst_mpp_h265_enc_handle_frame (GstVideoEncoder * encoder,
-    GstVideoCodecFrame * frame)
+gst_mpp_h265_enc_handle_frame (GstVideoEncoder *encoder,
+    GstVideoCodecFrame *frame)
 {
   GstVideoEncoderClass *pclass = GST_VIDEO_ENCODER_CLASS (parent_class);
 
@@ -268,7 +268,7 @@ gst_mpp_h265_enc_handle_frame (GstVideoEncoder * encoder,
 }
 
 static void
-gst_mpp_h265_enc_init (GstMppH265Enc * self)
+gst_mpp_h265_enc_init (GstMppH265Enc *self)
 {
   self->parent.mpp_type = MPP_VIDEO_CodingHEVC;
 
@@ -281,7 +281,7 @@ gst_mpp_h265_enc_init (GstMppH265Enc * self)
 }
 
 static void
-gst_mpp_h265_enc_class_init (GstMppH265EncClass * klass)
+gst_mpp_h265_enc_class_init (GstMppH265EncClass *klass)
 {
   GstVideoEncoderClass *encoder_class = GST_VIDEO_ENCODER_CLASS (klass);
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
@@ -343,7 +343,7 @@ gst_mpp_h265_enc_class_init (GstMppH265EncClass * klass)
 }
 
 gboolean
-gst_mpp_h265_enc_register (GstPlugin * plugin, guint rank)
+gst_mpp_h265_enc_register (GstPlugin *plugin, guint rank)
 {
   if (!gst_mpp_enc_supported (MPP_VIDEO_CodingHEVC))
     return FALSE;

@@ -372,7 +372,6 @@ gst_kms_src_get_crtc_pipe (GstKmsSrc * self, guint crtc_id)
 {
   drmModeResPtr res;
   guint crtc_pipe = 0;
-  gint i;
 
   if (!crtc_id)
     return 0;
@@ -381,7 +380,7 @@ gst_kms_src_get_crtc_pipe (GstKmsSrc * self, guint crtc_id)
   if (!res)
     return 0;
 
-  for (i = 0; i < res->count_crtcs; i++) {
+  for (guint i = 0; i < (guint) res->count_crtcs; i++) {
     if (res->crtcs[i] == crtc_id) {
       crtc_pipe = i;
       break;
@@ -501,9 +500,7 @@ drmCloseBufferHandle(int fd, uint32_t handle)
 static void
 gst_kms_src_free_fb (GstKmsSrc * self, struct kmssrc_fb * fb)
 {
-  guint i;
-
-  for (i = 0; i < 4; i++) {
+  for (gsize i = 0; i < 4; i++) {
     if (fb->handles[i])
       drmCloseBufferHandle (self->fd, fb->handles[i]);
 
@@ -516,7 +513,6 @@ gst_kms_src_update_info (GstKmsSrc * self, struct kmssrc_fb * fb)
 {
   GstVideoInfo *info = &self->info;
   GstVideoFormat format;
-  guint i;
 
 #define KMSSRC_CASE_FOURCC(fourcc, gst) \
   case DRM_FORMAT_ ## fourcc: format = GST_VIDEO_FORMAT_ ## gst; break;
@@ -552,7 +548,7 @@ gst_kms_src_update_info (GstKmsSrc * self, struct kmssrc_fb * fb)
   gst_video_info_set_format (info, format, fb->width, fb->height);
 
   GST_VIDEO_INFO_SIZE (info) = 0;
-  for (i = 0; i < GST_VIDEO_INFO_N_PLANES (info); i++) {
+  for (guint i = 0; i < GST_VIDEO_INFO_N_PLANES (info); i++) {
     GST_VIDEO_INFO_PLANE_STRIDE (info, i) = fb->pitches[i];
     GST_VIDEO_INFO_PLANE_OFFSET (info, i) = fb->offsets[i];
 
@@ -573,7 +569,6 @@ gst_kms_src_get_fb (GstKmsSrc * self, guint fb_id, struct kmssrc_fb * kmssrc_fb)
   drmModeFBPtr fb;
 #ifdef HAS_DRM_MODE_FB2
   drmModeFB2Ptr fb2;
-  guint i;
 #endif
 
   memset (kmssrc_fb, 0, sizeof (*kmssrc_fb));
@@ -581,7 +576,7 @@ gst_kms_src_get_fb (GstKmsSrc * self, guint fb_id, struct kmssrc_fb * kmssrc_fb)
 #ifdef HAS_DRM_MODE_FB2
   fb2 = drmModeGetFB2 (self->fd, fb_id);
   if (fb2) {
-    for (i = 0; i < 4; i++) {
+    for (guint i = 0; i < 4; i++) {
       kmssrc_fb->handles[i] = fb2->handles[i];
       kmssrc_fb->pitches[i] = fb2->pitches[i];
       kmssrc_fb->offsets[i] = fb2->offsets[i];
@@ -632,7 +627,7 @@ gst_kms_src_import_drm_fb (GstKmsSrc * self, guint fb_id)
   GstMemory *mem;
   struct kmssrc_fb fb;
   struct stat st[4];
-  gint i, dmafd[4], size[4];
+  gint dmafd[4], size[4];
 
   if (!gst_kms_src_get_fb (self, fb_id, &fb)) {
     GST_ERROR_OBJECT (self, "could not get DRM FB %d", fb_id);
@@ -646,7 +641,7 @@ gst_kms_src_import_drm_fb (GstKmsSrc * self, guint fb_id)
   if (!buf)
     goto err;
 
-  for (i = 0; i < 4; i++) {
+  for (gint i = 0; i < 4; i++) {
     if (!fb.handles[i])
       break;
 
@@ -844,14 +839,13 @@ gst_kms_src_find_best_crtc (GstKmsSrc * self)
 {
   drmModeCrtcPtr crtc;
   drmModeResPtr res;
-  guint crtc_id;
-  gint i;
+  guint crtc_id = 0;
 
   res = drmModeGetResources (self->fd);
   if (!res)
     return 0;
 
-  for (i = 0, crtc_id = 0; i < res->count_crtcs; i++) {
+  for (guint i = 0; i < (guint) res->count_crtcs; i++) {
     crtc = drmModeGetCrtc (self->fd, res->crtcs[i]);
     if (crtc && crtc->mode_valid) {
       drmModeFreeCrtc (crtc);

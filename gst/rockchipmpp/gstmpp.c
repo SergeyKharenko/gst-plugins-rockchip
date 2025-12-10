@@ -173,7 +173,7 @@ gst_mpp_gst_format_to_rga_format (GstVideoFormat gst_format)
 }
 
 static gboolean
-gst_mpp_set_rga_info (rga_info_t * info, RgaSURF_FORMAT rga_format,
+gst_mpp_set_rga_info (rga_info_t *info, RgaSURF_FORMAT rga_format,
     guint width, guint height, guint hstride, guint vstride)
 {
   struct gst_mpp_format *format = GST_MPP_GET_FORMAT (rga, rga_format);
@@ -197,7 +197,7 @@ gst_mpp_set_rga_info (rga_info_t * info, RgaSURF_FORMAT rga_format,
 }
 
 static gboolean
-gst_mpp_rga_info_from_mpp_frame (rga_info_t * info, MppFrame mframe)
+gst_mpp_rga_info_from_mpp_frame (rga_info_t *info, MppFrame mframe)
 {
   MppFrameFormat mpp_format = mpp_frame_get_fmt (mframe);
   MppBuffer mbuf = mpp_frame_get_buffer (mframe);
@@ -216,7 +216,7 @@ gst_mpp_rga_info_from_mpp_frame (rga_info_t * info, MppFrame mframe)
 }
 
 static gboolean
-gst_mpp_rga_info_from_video_info (rga_info_t * info, GstVideoInfo * vinfo)
+gst_mpp_rga_info_from_video_info (rga_info_t *info, GstVideoInfo *vinfo)
 {
   GstVideoFormat format = GST_VIDEO_INFO_FORMAT (vinfo);
   guint width = GST_VIDEO_INFO_WIDTH (vinfo);
@@ -230,7 +230,7 @@ gst_mpp_rga_info_from_video_info (rga_info_t * info, GstVideoInfo * vinfo)
 }
 
 static gboolean
-gst_mpp_rga_do_convert (rga_info_t * src_info, rga_info_t * dst_info)
+gst_mpp_rga_do_convert (rga_info_t *src_info, rga_info_t *dst_info)
 {
   static gint rga_supported = 1;
   static gint rga_inited = 0;
@@ -274,8 +274,8 @@ gst_mpp_rga_get_rotation (gint rotation)
 }
 
 gboolean
-gst_mpp_rga_convert (GstBuffer * inbuf, GstVideoInfo * src_vinfo,
-    GstMemory * out_mem, GstVideoInfo * dst_vinfo, gint rotation)
+gst_mpp_rga_convert (GstBuffer *inbuf, GstVideoInfo *src_vinfo,
+    GstMemory *out_mem, GstVideoInfo *dst_vinfo, gint rotation)
 {
   GstMapInfo mapinfo = { 0, };
   gboolean ret;
@@ -319,8 +319,8 @@ gst_mpp_rga_convert (GstBuffer * inbuf, GstVideoInfo * src_vinfo,
 }
 
 gboolean
-gst_mpp_rga_convert_from_mpp_frame (MppFrame * mframe,
-    GstMemory * out_mem, GstVideoInfo * dst_vinfo, gint rotation)
+gst_mpp_rga_convert_from_mpp_frame (MppFrame *mframe,
+    GstMemory *out_mem, GstVideoInfo *dst_vinfo, gint rotation)
 {
   rga_info_t src_info = { 0, };
   rga_info_t dst_info = { 0, };
@@ -342,7 +342,7 @@ gst_mpp_rga_convert_from_mpp_frame (MppFrame * mframe,
 #endif
 
 void
-gst_mpp_video_info_update_format (GstVideoInfo * info, GstVideoFormat format,
+gst_mpp_video_info_update_format (GstVideoInfo *info, GstVideoFormat format,
     guint width, guint height)
 {
   GstCaps *caps;
@@ -363,11 +363,10 @@ gst_mpp_video_info_update_format (GstVideoInfo * info, GstVideoFormat format,
 }
 
 gboolean
-gst_mpp_video_info_align (GstVideoInfo * info, gint hstride, gint vstride)
+gst_mpp_video_info_align (GstVideoInfo *info, gint hstride, gint vstride)
 {
   GstVideoAlignment align;
   guint stride;
-  guint i;
 
   if (!hstride)
     hstride = GST_MPP_ALIGN (GST_MPP_VIDEO_INFO_HSTRIDE (info));
@@ -406,7 +405,7 @@ gst_mpp_video_info_align (GstVideoInfo * info, gint hstride, gint vstride)
 
   /* Apply hstride */
   stride = GST_VIDEO_INFO_PLANE_STRIDE (info, 0);
-  for (i = 0; i < GST_VIDEO_INFO_N_PLANES (info); i++) {
+  for (guint i = 0; i < GST_VIDEO_INFO_N_PLANES (info); i++) {
     GST_VIDEO_INFO_PLANE_STRIDE (info, i) =
         GST_VIDEO_INFO_PLANE_STRIDE (info, i) * hstride / stride;
     GST_VIDEO_INFO_PLANE_OFFSET (info, i) =
@@ -424,10 +423,8 @@ gst_mpp_video_info_align (GstVideoInfo * info, gint hstride, gint vstride)
 }
 
 gboolean
-gst_mpp_video_info_matched (GstVideoInfo * info, GstVideoInfo * other)
+gst_mpp_video_info_matched (GstVideoInfo *info, GstVideoInfo *other)
 {
-  guint i;
-
   if (GST_VIDEO_INFO_FORMAT (info) != GST_VIDEO_INFO_FORMAT (other))
     return FALSE;
 
@@ -437,7 +434,7 @@ gst_mpp_video_info_matched (GstVideoInfo * info, GstVideoInfo * other)
   if (GST_VIDEO_INFO_HEIGHT (info) != GST_VIDEO_INFO_HEIGHT (other))
     return FALSE;
 
-  for (i = 0; i < GST_VIDEO_INFO_N_PLANES (info); i++) {
+  for (guint i = 0; i < GST_VIDEO_INFO_N_PLANES (info); i++) {
     if (GST_VIDEO_INFO_PLANE_STRIDE (info,
             i) != GST_VIDEO_INFO_PLANE_STRIDE (other, i))
       return FALSE;
@@ -450,7 +447,7 @@ gst_mpp_video_info_matched (GstVideoInfo * info, GstVideoInfo * other)
 }
 
 gboolean
-gst_mpp_frame_info_changed (MppFrame * frame, MppFrame * other)
+gst_mpp_frame_info_changed (MppFrame *frame, MppFrame *other)
 {
   if (!frame || !other)
     return TRUE;
@@ -480,7 +477,7 @@ gst_mpp_frame_info_changed (MppFrame * frame, MppFrame * other)
 }
 
 guint
-gst_mpp_get_pixel_stride (GstVideoInfo * info)
+gst_mpp_get_pixel_stride (GstVideoInfo *info)
 {
   GstVideoFormat gst_format = GST_VIDEO_INFO_FORMAT (info);
   struct gst_mpp_format *format = GST_MPP_GET_FORMAT (gst, gst_format);
@@ -493,7 +490,7 @@ gst_mpp_get_pixel_stride (GstVideoInfo * info)
 }
 
 static gboolean
-plugin_init (GstPlugin * plugin)
+plugin_init (GstPlugin *plugin)
 {
   GST_DEBUG_CATEGORY_INIT (GST_CAT_DEFAULT, "mpp", 0, "MPP");
 

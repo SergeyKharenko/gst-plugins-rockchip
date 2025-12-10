@@ -82,7 +82,7 @@ gst_mpp_ext_buffer_quark (void)
 }
 
 void
-gst_mpp_allocator_set_cacheable (GstAllocator * allocator, gboolean cacheable)
+gst_mpp_allocator_set_cacheable (GstAllocator *allocator, gboolean cacheable)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   self->cacheable = cacheable;
@@ -93,21 +93,21 @@ gst_mpp_allocator_set_cacheable (GstAllocator * allocator, gboolean cacheable)
 }
 
 gint
-gst_mpp_allocator_get_index (GstAllocator * allocator)
+gst_mpp_allocator_get_index (GstAllocator *allocator)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   return self->index;
 }
 
 MppBufferGroup
-gst_mpp_allocator_get_mpp_group (GstAllocator * allocator)
+gst_mpp_allocator_get_mpp_group (GstAllocator *allocator)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   return self->group;
 }
 
 MppBuffer
-gst_mpp_mpp_buffer_from_gst_memory (GstMemory * mem)
+gst_mpp_mpp_buffer_from_gst_memory (GstMemory *mem)
 {
   if (mem->parent)
     return gst_mpp_mpp_buffer_from_gst_memory (mem->parent);
@@ -125,7 +125,7 @@ gst_mpp_mem_destroy (gpointer ptr)
 }
 
 static GstMemory *
-gst_mpp_allocator_import_dmafd (GstAllocator * allocator, gint fd, guint size)
+gst_mpp_allocator_import_dmafd (GstAllocator *allocator, gint fd, guint size)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   GstMemory *mem;
@@ -151,7 +151,7 @@ gst_mpp_allocator_import_dmafd (GstAllocator * allocator, gint fd, guint size)
 }
 
 GstMemory *
-gst_mpp_allocator_import_mppbuf (GstAllocator * allocator, MppBuffer mbuf)
+gst_mpp_allocator_import_mppbuf (GstAllocator *allocator, MppBuffer mbuf)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   GstMemory *mem;
@@ -188,7 +188,7 @@ gst_mpp_allocator_import_mppbuf (GstAllocator * allocator, MppBuffer mbuf)
 }
 
 GstMemory *
-gst_mpp_allocator_import_gst_memory (GstAllocator * allocator, GstMemory * mem)
+gst_mpp_allocator_import_gst_memory (GstAllocator *allocator, GstMemory *mem)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   MppBuffer mbuf;
@@ -219,7 +219,7 @@ gst_mpp_allocator_import_gst_memory (GstAllocator * allocator, GstMemory * mem)
 }
 
 MppBuffer
-gst_mpp_allocator_alloc_mppbuf (GstAllocator * allocator, gsize size)
+gst_mpp_allocator_alloc_mppbuf (GstAllocator *allocator, gsize size)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
   MppBuffer mbuf = NULL;
@@ -231,8 +231,8 @@ gst_mpp_allocator_alloc_mppbuf (GstAllocator * allocator, gsize size)
 }
 
 static GstMemory *
-gst_mpp_allocator_alloc (GstAllocator * allocator, gsize size,
-    GstAllocationParams * params UNUSED)
+gst_mpp_allocator_alloc (GstAllocator *allocator, gsize size,
+    GstAllocationParams *params UNUSED)
 {
   GstMemory *mem;
   MppBuffer mbuf;
@@ -251,7 +251,7 @@ gst_mpp_allocator_alloc (GstAllocator * allocator, gsize size,
 }
 
 static gpointer
-gst_mpp_mem_map_full (GstMemory * mem, GstMapInfo * info, gsize size)
+gst_mpp_mem_map_full (GstMemory *mem, GstMapInfo *info, gsize size)
 {
   if (mem->parent)
     return gst_mpp_mem_map_full (mem->parent, info, size);
@@ -263,7 +263,7 @@ gst_mpp_mem_map_full (GstMemory * mem, GstMapInfo * info, gsize size)
 }
 
 static void
-gst_mpp_allocator_free (GstAllocator * allocator, GstMemory * gmem)
+gst_mpp_allocator_free (GstAllocator *allocator, GstMemory *gmem)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (allocator);
 
@@ -305,7 +305,7 @@ gst_mpp_allocator_new (void)
 }
 
 static void
-gst_mpp_allocator_finalize (GObject * obj)
+gst_mpp_allocator_finalize (GObject *obj)
 {
   GstMppAllocator *self = GST_MPP_ALLOCATOR (obj);
 
@@ -316,7 +316,7 @@ gst_mpp_allocator_finalize (GObject * obj)
 }
 
 static void
-gst_mpp_allocator_class_init (GstMppAllocatorClass * klass)
+gst_mpp_allocator_class_init (GstMppAllocatorClass *klass)
 {
   GstAllocatorClass *allocator_class = GST_ALLOCATOR_CLASS (klass);
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
@@ -330,7 +330,7 @@ gst_mpp_allocator_class_init (GstMppAllocatorClass * klass)
 }
 
 static void
-gst_mpp_allocator_init (GstMppAllocator * allocator)
+gst_mpp_allocator_init (GstMppAllocator *allocator)
 {
   GstAllocator *alloc = GST_ALLOCATOR_CAST (allocator);
 

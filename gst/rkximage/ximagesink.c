@@ -145,14 +145,14 @@ drm_plane_get_type (int fd, drmModePlane * plane)
 {
   drmModeObjectPropertiesPtr props;
   drmModePropertyPtr prop;
-  int i, type = -1;
+  int type = -1;
 
   props = drmModeObjectGetProperties (fd, plane->plane_id,
       DRM_MODE_OBJECT_PLANE);
   if (!props)
     return -1;
 
-  for (i = 0; i < props->count_props; i++) {
+  for (gsize i = 0; i < (gsize) props->count_props; i++) {
     prop = drmModeGetProperty (fd, props->props[i]);
     if (prop && !strcmp (prop->name, "type"))
       type = props->prop_values[i];
@@ -167,10 +167,10 @@ static drmModePlane *
 drm_find_plane_for_crtc_by_type (int fd, drmModeRes * res,
     drmModePlaneRes * pres, int crtc_id, int type)
 {
-  int i, pipe = -1, num_primary = 0;
+  int pipe = -1, num_primary = 0;
 
-  for (i = 0; i < res->count_crtcs; i++) {
-    if (crtc_id == res->crtcs[i]) {
+  for (gsize i = 0; i < (gsize) res->count_crtcs; i++) {
+    if ((guint32) crtc_id == res->crtcs[i]) {
       pipe = i;
       break;
     }
@@ -179,7 +179,7 @@ drm_find_plane_for_crtc_by_type (int fd, drmModeRes * res,
   if (pipe == -1)
     return NULL;
 
-  for (i = 0; i < pres->count_planes; i++) {
+  for (gsize i = 0; i < pres->count_planes; i++) {
     drmModePlane *plane = drmModeGetPlane (fd, pres->planes[i]);
     int plane_type = drm_plane_get_type (fd, plane);
     int primary = plane_type == DRM_PLANE_TYPE_PRIMARY;
@@ -199,17 +199,17 @@ static drmModeCrtc *
 drm_find_crtc_for_connector (int fd, drmModeRes * res, drmModeConnector * conn,
     guint * pipe)
 {
-  int i;
-  int crtc_id;
+  guint32 crtc_id = 0;
+  gboolean found = FALSE;
   drmModeEncoder *enc;
   drmModeCrtc *crtc;
 
-  crtc_id = -1;
-  for (i = 0; i < res->count_encoders; i++) {
+  for (gsize i = 0; i < (gsize) res->count_encoders; i++) {
     enc = drmModeGetEncoder (fd, res->encoders[i]);
     if (enc) {
       if (enc->encoder_id == conn->encoder_id) {
         crtc_id = enc->crtc_id;
+        found = TRUE;
         drmModeFreeEncoder (enc);
         break;
       }
@@ -217,10 +217,10 @@ drm_find_crtc_for_connector (int fd, drmModeRes * res, drmModeConnector * conn,
     }
   }
 
-  if (crtc_id == -1)
+  if (!found)
     return NULL;
 
-  for (i = 0; i < res->count_crtcs; i++) {
+  for (gsize i = 0; i < (gsize) res->count_crtcs; i++) {
     crtc = drmModeGetCrtc (fd, res->crtcs[i]);
     if (crtc) {
       if (crtc_id == crtc->crtc_id) {
@@ -255,13 +255,12 @@ drm_connector_is_used (int fd, drmModeRes * res, drmModeConnector * conn)
 }
 
 static drmModeConnector *
-drm_find_used_connector_by_type (int fd, drmModeRes * res, int type)
+drm_find_used_connector_by_type (int fd, drmModeRes * res, uint32_t type)
 {
-  int i;
   drmModeConnector *conn;
 
   conn = NULL;
-  for (i = 0; i < res->count_connectors; i++) {
+  for (gsize i = 0; i < (gsize) res->count_connectors; i++) {
     conn = drmModeGetConnector (fd, res->connectors[i]);
     if (conn) {
       if ((conn->connector_type == type)
@@ -277,11 +276,10 @@ drm_find_used_connector_by_type (int fd, drmModeRes * res, int type)
 static drmModeConnector *
 drm_find_first_used_connector (int fd, drmModeRes * res)
 {
-  int i;
   drmModeConnector *conn;
 
   conn = NULL;
-  for (i = 0; i < res->count_connectors; i++) {
+  for (gsize i = 0; i < (gsize) res->count_connectors; i++) {
     conn = drmModeGetConnector (fd, res->connectors[i]);
     if (conn) {
       if (drm_connector_is_used (fd, res, conn))
@@ -297,14 +295,15 @@ static drmModeConnector *
 drm_find_main_monitor (int fd, drmModeRes * res)
 {
   /* Find the LVDS and eDP connectors: those are the main screens. */
-  static const int priority[] = { DRM_MODE_CONNECTOR_LVDS,
+  static const uint32_t priority[] = { 
+    DRM_MODE_CONNECTOR_LVDS,
     DRM_MODE_CONNECTOR_eDP
   };
-  int i;
+
   drmModeConnector *conn;
 
   conn = NULL;
-  for (i = 0; !conn && i < G_N_ELEMENTS (priority); i++)
+  for (gsize i = 0; !conn && i < G_N_ELEMENTS (priority); i++)
     conn = drm_find_used_connector_by_type (fd, res, priority[i]);
 
   /* if we didn't find a connector, grab the first one in use */
@@ -388,7 +387,6 @@ check_afbc (GstRkXImageSink * self, drmModePlane * plane, guint32 drmfmt,
   struct drm_format_modifier *modifiers;
   guint32 *formats;
   guint64 value = 0;
-  gint i, j;
 
   *linear = *afbc = FALSE;
 
@@ -403,7 +401,7 @@ check_afbc (GstRkXImageSink * self, drmModePlane * plane, guint32 drmfmt,
     return;
   }
 
-  for (i = 0; i < props->count_props && !value; i++) {
+  for (gsize i = 0; i < props->count_props && !value; i++) {
     prop = drmModeGetProperty (self->fd, props->props[i]);
     if (!prop)
       continue;
@@ -432,16 +430,16 @@ check_afbc (GstRkXImageSink * self, drmModePlane * plane, guint32 drmfmt,
     ((gchar *) header + header->modifiers_offset);
   formats = (guint32 *) ((gchar *) header + header->formats_offset);
 
-  for (i = 0; i < header->count_formats; i++) {
+  for (gsize i = 0; i < header->count_formats; i++) {
     if (formats[i] != drmfmt)
       continue;
 
-    for (j = 0; j < header->count_modifiers; j++) {
+    for (gsize j = 0; j < header->count_modifiers; j++) {
       struct drm_format_modifier *mod = &modifiers[j];
 
       if ((i < mod->offset) || (i > mod->offset + 63))
         continue;
-      if (!(mod->formats & (1 << (i - mod->offset))))
+      if (!(mod->formats & (1ULL << (i - mod->offset))))
         continue;
 
       if (mod->modifier == DRM_AFBC_MODIFIER)
@@ -459,7 +457,6 @@ drm_ensure_allowed_caps (GstRkXImageSink * self, drmModePlane * plane,
     drmModeRes * res)
 {
   GstCaps *out_caps, *caps;
-  int i;
   GstVideoFormat fmt;
   const gchar *format;
 
@@ -470,7 +467,7 @@ drm_ensure_allowed_caps (GstRkXImageSink * self, drmModePlane * plane,
   if (!out_caps)
     return FALSE;
 
-  for (i = 0; i < plane->count_formats; i++) {
+  for (gsize i = 0; i < plane->count_formats; i++) {
     gboolean linear = FALSE, afbc = FALSE;
 
     check_afbc (self, plane, plane->formats[i], &linear, &afbc);
@@ -527,14 +524,14 @@ drm_plane_set_property (GstRkXImageSink * self, drmModePlane * plane,
 {
   drmModeObjectPropertiesPtr props;
   drmModePropertyPtr prop;
-  int i, ret = -1;
+  int ret = -1;
 
   props = drmModeObjectGetProperties (self->fd, plane->plane_id,
       DRM_MODE_OBJECT_PLANE);
   if (!props)
     return FALSE;
 
-  for (i = 0; i < props->count_props; i++) {
+  for (gsize i = 0; i < props->count_props; i++) {
     prop = drmModeGetProperty (self->fd, props->props[i]);
     if (prop && !strcmp (prop->name, prop_name)) {
       ret = drmModeObjectSetProperty (self->fd, plane->plane_id,
@@ -721,7 +718,7 @@ gst_kms_sink_import_dmabuf (GstRkXImageSink * self, GstBuffer * inbuf,
 {
   gint prime_fds[GST_VIDEO_MAX_PLANES] = { 0, };
   GstVideoMeta *meta;
-  guint i, n_mem, n_planes;
+  guint n_mem, n_planes;
   GstKMSMemory *kmsmem;
   guint mems_idx[GST_VIDEO_MAX_PLANES];
   gsize mems_skip[GST_VIDEO_MAX_PLANES];
@@ -751,14 +748,14 @@ gst_kms_sink_import_dmabuf (GstRkXImageSink * self, GstBuffer * inbuf,
     GST_VIDEO_INFO_WIDTH (&self->vinfo) = meta->width;
     GST_VIDEO_INFO_HEIGHT (&self->vinfo) = meta->height;
 
-    for (i = 0; i < meta->n_planes; i++) {
+    for (gsize i = 0; i < meta->n_planes; i++) {
       GST_VIDEO_INFO_PLANE_OFFSET (&self->vinfo, i) = meta->offset[i];
       GST_VIDEO_INFO_PLANE_STRIDE (&self->vinfo, i) = meta->stride[i];
     }
   }
 
   /* Find and validate all memories */
-  for (i = 0; i < n_planes; i++) {
+  for (gsize i = 0; i < n_planes; i++) {
     guint length;
 
     if (!gst_buffer_find_memory (inbuf,
@@ -784,7 +781,7 @@ gst_kms_sink_import_dmabuf (GstRkXImageSink * self, GstBuffer * inbuf,
     goto wrap_mem;
   }
 
-  for (i = 0; i < n_planes; i++)
+  for (gsize i = 0; i < n_planes; i++)
     prime_fds[i] = gst_dmabuf_memory_get_fd (mems[i]);
 
   GST_LOG_OBJECT (self, "found these prime ids: %d, %d, %d, %d", prime_fds[0],
@@ -912,6 +909,10 @@ sync_handler (gint fd, guint frame, guint sec, guint usec, gpointer data)
 {
   gboolean *waiting;
 
+  (void) fd;
+  (void) frame;
+  (void) sec;
+  (void) usec;
   waiting = data;
   *waiting = FALSE;
 }
@@ -1788,7 +1789,7 @@ gst_x_image_sink_xcontext_get (GstRkXImageSink * ximagesink)
 {
   GstXContext *xcontext = NULL;
   XPixmapFormatValues *px_formats = NULL;
-  gint nb_formats = 0, i;
+  gint nb_formats = 0;
   gint endianness;
   GstVideoFormat vformat;
   guint32 alpha_mask;
@@ -1838,7 +1839,7 @@ gst_x_image_sink_xcontext_get (GstRkXImageSink * ximagesink)
   }
 
   /* We get bpp value corresponding to our running depth */
-  for (i = 0; i < nb_formats; i++) {
+  for (gsize i = 0; i < (gsize) nb_formats; i++) {
     if (px_formats[i].depth == xcontext->depth)
       xcontext->bpp = px_formats[i].bits_per_pixel;
   }

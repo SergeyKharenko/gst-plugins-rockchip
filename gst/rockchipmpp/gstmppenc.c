@@ -126,9 +126,7 @@ static const MppFrameFormat gst_mpp_enc_formats[] = {
 static gboolean
 gst_mpp_enc_format_supported (MppFrameFormat format)
 {
-  guint i;
-
-  for (i = 0; i < ARRAY_SIZE (gst_mpp_enc_formats); i++) {
+  for (guint i = 0; i < ARRAY_SIZE (gst_mpp_enc_formats); i++) {
     if (format == gst_mpp_enc_formats[i])
       return TRUE;
   }
@@ -155,7 +153,7 @@ gst_mpp_enc_supported (MppCodingType mpp_type)
 }
 
 gboolean
-gst_mpp_enc_video_info_align (GstVideoInfo * info)
+gst_mpp_enc_video_info_align (GstVideoInfo *info)
 {
   gint vstride = 0;
 
@@ -167,8 +165,8 @@ gst_mpp_enc_video_info_align (GstVideoInfo * info)
 }
 
 static void
-gst_mpp_enc_set_property (GObject * object,
-    guint prop_id, const GValue * value, GParamSpec * pspec)
+gst_mpp_enc_set_property (GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (object);
   GstMppEnc *self = GST_MPP_ENC (encoder);
@@ -284,8 +282,8 @@ gst_mpp_enc_set_property (GObject * object,
 }
 
 static void
-gst_mpp_enc_get_property (GObject * object,
-    guint prop_id, GValue * value, GParamSpec * pspec)
+gst_mpp_enc_get_property (GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (object);
   GstMppEnc *self = GST_MPP_ENC (encoder);
@@ -340,7 +338,7 @@ gst_mpp_enc_get_property (GObject * object,
 }
 
 gboolean
-gst_mpp_enc_apply_properties (GstVideoEncoder * encoder)
+gst_mpp_enc_apply_properties (GstVideoEncoder *encoder)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoInfo *info = &self->info;
@@ -395,7 +393,7 @@ gst_mpp_enc_apply_properties (GstVideoEncoder * encoder)
 }
 
 gboolean
-gst_mpp_enc_set_src_caps (GstVideoEncoder * encoder, GstCaps * caps)
+gst_mpp_enc_set_src_caps (GstVideoEncoder *encoder, GstCaps *caps)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoInfo *info = &self->info;
@@ -418,7 +416,7 @@ gst_mpp_enc_set_src_caps (GstVideoEncoder * encoder, GstCaps * caps)
 }
 
 static void
-gst_mpp_enc_stop_task (GstVideoEncoder * encoder, gboolean drain)
+gst_mpp_enc_stop_task (GstVideoEncoder *encoder, gboolean drain)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstTask *task = encoder->srcpad->task;
@@ -448,7 +446,7 @@ gst_mpp_enc_stop_task (GstVideoEncoder * encoder, gboolean drain)
 }
 
 static void
-gst_mpp_enc_reset (GstVideoEncoder * encoder, gboolean drain, gboolean final)
+gst_mpp_enc_reset (GstVideoEncoder *encoder, gboolean drain, gboolean final)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
 
@@ -483,7 +481,7 @@ gst_mpp_enc_reset (GstVideoEncoder * encoder, gboolean drain, gboolean final)
 }
 
 static gboolean
-gst_mpp_enc_start (GstVideoEncoder * encoder)
+gst_mpp_enc_start (GstVideoEncoder *encoder)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   MppPollType timeout;
@@ -549,7 +547,7 @@ err_unref_alloc:
 }
 
 static gboolean
-gst_mpp_enc_stop (GstVideoEncoder * encoder)
+gst_mpp_enc_stop (GstVideoEncoder *encoder)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
 
@@ -580,7 +578,7 @@ gst_mpp_enc_stop (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_enc_flush (GstVideoEncoder * encoder)
+gst_mpp_enc_flush (GstVideoEncoder *encoder)
 {
   GST_DEBUG_OBJECT (encoder, "flushing");
   gst_mpp_enc_reset (encoder, FALSE, FALSE);
@@ -588,7 +586,7 @@ gst_mpp_enc_flush (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_enc_finish (GstVideoEncoder * encoder)
+gst_mpp_enc_finish (GstVideoEncoder *encoder)
 {
   GST_DEBUG_OBJECT (encoder, "finishing");
   gst_mpp_enc_reset (encoder, TRUE, FALSE);
@@ -596,8 +594,7 @@ gst_mpp_enc_finish (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_enc_apply_strides (GstVideoEncoder * encoder, gint hstride,
-    gint vstride)
+gst_mpp_enc_apply_strides (GstVideoEncoder *encoder, gint hstride, gint vstride)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoInfo *info = &self->info;
@@ -618,7 +615,7 @@ gst_mpp_enc_apply_strides (GstVideoEncoder * encoder, gint hstride,
 }
 
 static gboolean
-gst_mpp_enc_set_format (GstVideoEncoder * encoder, GstVideoCodecState * state)
+gst_mpp_enc_set_format (GstVideoEncoder *encoder, GstVideoCodecState *state)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoInfo *info = &self->info;
@@ -728,7 +725,7 @@ gst_mpp_enc_set_format (GstVideoEncoder * encoder, GstVideoCodecState * state)
 }
 
 static gboolean
-gst_mpp_enc_propose_allocation (GstVideoEncoder * encoder, GstQuery * query)
+gst_mpp_enc_propose_allocation (GstVideoEncoder *encoder, GstQuery *query)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstStructure *config, *params;
@@ -788,7 +785,7 @@ gst_mpp_enc_propose_allocation (GstVideoEncoder * encoder, GstQuery * query)
 }
 
 static GstBuffer *
-gst_mpp_enc_convert (GstVideoEncoder * encoder, GstVideoCodecFrame * frame)
+gst_mpp_enc_convert (GstVideoEncoder *encoder, GstVideoCodecFrame *frame)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoInfo src_info = self->input_state->info;
@@ -799,13 +796,12 @@ gst_mpp_enc_convert (GstVideoEncoder * encoder, GstVideoCodecFrame * frame)
   GstVideoMeta *meta;
   gsize size, maxsize, offset;
   gint src_hstride, src_vstride;
-  guint i;
 
   inbuf = frame->input_buffer;
 
   meta = gst_buffer_get_video_meta (inbuf);
   if (meta) {
-    for (i = 0; i < meta->n_planes; i++) {
+    for (guint i = 0; i < meta->n_planes; i++) {
       GST_VIDEO_INFO_PLANE_STRIDE (&src_info, i) = meta->stride[i];
       GST_VIDEO_INFO_PLANE_OFFSET (&src_info, i) = meta->offset[i];
     }
@@ -924,7 +920,7 @@ err:
 }
 
 static gboolean
-gst_mpp_enc_send_frame_locked (GstVideoEncoder * encoder)
+gst_mpp_enc_send_frame_locked (GstVideoEncoder *encoder)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoCodecFrame *frame;
@@ -975,7 +971,7 @@ gst_mpp_enc_send_frame_locked (GstVideoEncoder * encoder)
 }
 
 static gboolean
-gst_mpp_enc_poll_packet_locked (GstVideoEncoder * encoder)
+gst_mpp_enc_poll_packet_locked (GstVideoEncoder *encoder)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstVideoCodecFrame *frame;
@@ -1056,7 +1052,7 @@ drop:
 }
 
 static void
-gst_mpp_enc_loop (GstVideoEncoder * encoder)
+gst_mpp_enc_loop (GstVideoEncoder *encoder)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
 
@@ -1088,7 +1084,7 @@ out:
 }
 
 static GstFlowReturn
-gst_mpp_enc_handle_frame (GstVideoEncoder * encoder, GstVideoCodecFrame * frame)
+gst_mpp_enc_handle_frame (GstVideoEncoder *encoder, GstVideoCodecFrame *frame)
 {
   GstMppEnc *self = GST_MPP_ENC (encoder);
   GstBuffer *buffer;
@@ -1157,7 +1153,7 @@ drop:
 }
 
 static GstStateChangeReturn
-gst_mpp_enc_change_state (GstElement * element, GstStateChange transition)
+gst_mpp_enc_change_state (GstElement *element, GstStateChange transition)
 {
   GstVideoEncoder *encoder = GST_VIDEO_ENCODER (element);
 
@@ -1171,7 +1167,7 @@ gst_mpp_enc_change_state (GstElement * element, GstStateChange transition)
 }
 
 static void
-gst_mpp_enc_init (GstMppEnc * self)
+gst_mpp_enc_init (GstMppEnc *self)
 {
   self->mpp_type = MPP_VIDEO_CodingUnused;
 
@@ -1267,7 +1263,7 @@ gst_mpp_enc_rotation_get_type (void)
 #endif
 
 static void
-gst_mpp_enc_class_init (GstMppEncClass * klass)
+gst_mpp_enc_class_init (GstMppEncClass *klass)
 {
   GstVideoEncoderClass *encoder_class = GST_VIDEO_ENCODER_CLASS (klass);
   GObjectClass *gobject_class = G_OBJECT_CLASS (klass);

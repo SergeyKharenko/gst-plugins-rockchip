@@ -1,5 +1,5 @@
-project('gst-plugins-bad', 'c',
-  version : '1.14.4',
+project('gst-plugins-rockchip', 'c',
+  version : '0.0.1',
   license : 'LGPL',
   meson_version : '>= 0.47',
   default_options : [ 'warning_level=2',
@@ -12,7 +12,7 @@ gst_version_minor = version_arr[1].to_int()
 gst_version_micro = version_arr[2].to_int()
 
 glib_req = '>= 2.32'
-gst_req = '>= @0@.@1@.0'.format(gst_version_major, gst_version_minor)
+gst_req = '>= 1.14.4'
 
 api_version = '1.0'
 soversion = 0
@@ -54,7 +54,7 @@ add_project_arguments('-DUNUSED=__attribute__((unused))', language: 'c')
 cdata = configuration_data()
 
 cdata.set_quoted('VERSION', gst_version)
-cdata.set_quoted('PACKAGE', 'gst-rockchip')
+cdata.set_quoted('PACKAGE', 'gst-plugins-rockchip')
 cdata.set_quoted('PACKAGE_VERSION', gst_version)
 cdata.set_quoted('PACKAGE_NAME', 'GStreamer Rockchip Plug-ins')
 cdata.set_quoted('GST_API_VERSION', api_version)

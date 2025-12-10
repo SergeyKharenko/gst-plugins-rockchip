@@ -50,7 +50,7 @@ G_DEFINE_TYPE (GstMppVpxAlphaDecodeBin, gst_mpp_vpx_alpha_decode_bin,
     GST_TYPE_MPP_ALPHA_DECODE_BIN);
 
 static void
-gst_mpp_vpx_alpha_decode_bin_class_init (GstMppVpxAlphaDecodeBinClass * klass)
+gst_mpp_vpx_alpha_decode_bin_class_init (GstMppVpxAlphaDecodeBinClass *klass)
 {
   GstMppAlphaDecodeBinClass *adbin_class = (GstMppAlphaDecodeBinClass *) klass;
   GstElementClass *element_class = (GstElementClass *) klass;
@@ -65,13 +65,13 @@ gst_mpp_vpx_alpha_decode_bin_class_init (GstMppVpxAlphaDecodeBinClass * klass)
 }
 
 static void
-gst_mpp_vpx_alpha_decode_bin_init (GstMppVpxAlphaDecodeBin * self)
+gst_mpp_vpx_alpha_decode_bin_init (GstMppVpxAlphaDecodeBin *self)
 {
   (void) self;
 }
 
 gboolean
-gst_mpp_vpx_alpha_decode_bin_register (GstPlugin * plugin, guint rank)
+gst_mpp_vpx_alpha_decode_bin_register (GstPlugin *plugin, guint rank)
 {
   return gst_element_register (plugin, "mppvpxalphadecodebin", rank,
       gst_mpp_vpx_alpha_decode_bin_get_type ());

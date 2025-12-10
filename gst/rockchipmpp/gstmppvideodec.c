@@ -79,7 +79,7 @@ static GstStaticPadTemplate gst_mpp_video_dec_src_template =
     );
 
 static MppCodingType
-gst_mpp_video_dec_get_mpp_type (GstStructure * s)
+gst_mpp_video_dec_get_mpp_type (GstStructure *s)
 {
   if (gst_structure_has_name (s, "video/x-h263"))
     return MPP_VIDEO_CodingH263;
@@ -119,8 +119,8 @@ gst_mpp_video_dec_get_mpp_type (GstStructure * s)
 }
 
 static void
-gst_mpp_video_dec_set_property (GObject * object,
-    guint prop_id, const GValue * value, GParamSpec * pspec)
+gst_mpp_video_dec_set_property (GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (object);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -147,8 +147,8 @@ gst_mpp_video_dec_set_property (GObject * object,
 }
 
 static void
-gst_mpp_video_dec_get_property (GObject * object,
-    guint prop_id, GValue * value, GParamSpec * pspec)
+gst_mpp_video_dec_get_property (GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
 {
   GstVideoDecoder *decoder = GST_VIDEO_DECODER (object);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -167,8 +167,8 @@ gst_mpp_video_dec_get_property (GObject * object,
 }
 
 static gboolean
-gst_mpp_video_dec_set_format (GstVideoDecoder * decoder,
-    GstVideoCodecState * state)
+gst_mpp_video_dec_set_format (GstVideoDecoder *decoder,
+    GstVideoCodecState *state)
 {
   GstVideoDecoderClass *pclass = GST_VIDEO_DECODER_CLASS (parent_class);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -190,7 +190,7 @@ gst_mpp_video_dec_set_format (GstVideoDecoder * decoder,
 }
 
 static gboolean
-gst_mpp_video_dec_startup (GstVideoDecoder * decoder)
+gst_mpp_video_dec_startup (GstVideoDecoder *decoder)
 {
   GstMppVideoDec *self = GST_MPP_VIDEO_DEC (decoder);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -225,8 +225,8 @@ gst_mpp_video_dec_startup (GstVideoDecoder * decoder)
 }
 
 static MppPacket
-gst_mpp_video_dec_get_mpp_packet (GstVideoDecoder * decoder UNUSED,
-    GstMapInfo * mapinfo)
+gst_mpp_video_dec_get_mpp_packet (GstVideoDecoder *decoder UNUSED,
+    GstMapInfo *mapinfo)
 {
   MppPacket mpkt = NULL;
   mpp_packet_init (&mpkt, mapinfo->data, mapinfo->size);
@@ -234,7 +234,7 @@ gst_mpp_video_dec_get_mpp_packet (GstVideoDecoder * decoder UNUSED,
 }
 
 static MPP_RET
-gst_mpp_video_dec_send_mpp_packet (GstVideoDecoder * decoder,
+gst_mpp_video_dec_send_mpp_packet (GstVideoDecoder *decoder,
     MppPacket mpkt, gint timeout_ms)
 {
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -250,7 +250,7 @@ gst_mpp_video_dec_send_mpp_packet (GstVideoDecoder * decoder,
 }
 
 static MppFrame
-gst_mpp_video_dec_poll_mpp_frame (GstVideoDecoder * decoder, gint timeout_ms)
+gst_mpp_video_dec_poll_mpp_frame (GstVideoDecoder *decoder, gint timeout_ms)
 {
   GstMppVideoDec *self = GST_MPP_VIDEO_DEC (decoder);
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
@@ -267,7 +267,7 @@ gst_mpp_video_dec_poll_mpp_frame (GstVideoDecoder * decoder, gint timeout_ms)
 }
 
 static gboolean
-gst_mpp_video_dec_shutdown (GstVideoDecoder * decoder, gboolean drain)
+gst_mpp_video_dec_shutdown (GstVideoDecoder *decoder, gboolean drain)
 {
   GstMppDec *mppdec = GST_MPP_DEC (decoder);
   MppPacket mpkt;
@@ -325,7 +325,7 @@ gst_mpp_video_dec_format_get_type (void)
 }
 
 static void
-gst_mpp_video_dec_init (GstMppVideoDec * self)
+gst_mpp_video_dec_init (GstMppVideoDec *self)
 {
   GstMppDec *mppdec = GST_MPP_DEC (self);
   mppdec->format = DEFAULT_PROP_FORMAT;
@@ -353,7 +353,7 @@ gst_mpp_video_dec_setup_default_format (void)
 }
 
 static void
-gst_mpp_video_dec_class_init (GstMppVideoDecClass * klass)
+gst_mpp_video_dec_class_init (GstMppVideoDecClass *klass)
 {
   GstVideoDecoderClass *decoder_class = GST_VIDEO_DECODER_CLASS (klass);
   GstMppDecClass *pclass = GST_MPP_DEC_CLASS (klass);
@@ -409,7 +409,7 @@ gst_mpp_video_dec_class_init (GstMppVideoDecClass * klass)
 }
 
 gboolean
-gst_mpp_video_dec_register (GstPlugin * plugin, guint rank)
+gst_mpp_video_dec_register (GstPlugin *plugin, guint rank)
 {
   return gst_element_register (plugin, "mppvideodec", rank,
       gst_mpp_video_dec_get_type ());
