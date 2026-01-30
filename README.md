@@ -50,7 +50,10 @@ sudo apt install libx11-dev libx11-xcb-dev libdrm-dev
 
 ### **4. Rockchip-specific dependencies**
 
-- **MPP** — https://github.com/rockchip-linux/mpp  
+- **MPP** — ~~https://github.com/rockchip-linux/mpp~~ → https://github.com/HermanChen/mpp.git  
+  **Reason for mirror:** The official MPP repository was taken down after Rockchip allegedly violated the DMCA.  
+  **NOTICE / STRONG STATEMENT:** **I was previously unaware of this, but now that I know the truth, I am furious. Rockchip has shown a persistent disregard for open-source code rights, and this is unacceptable!!!**  
+
   Recommended install prefix:
 
 ```sh
@@ -97,4 +100,3 @@ meson setup .. --prefix=/usr -Drga=disabled
 ```
 
 ---
-
